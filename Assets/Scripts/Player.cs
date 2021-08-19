@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
 
     // State
     bool isAlive = true;
+    float jumpsLeft = 1;
 
     // Cached component references
     Rigidbody2D myRigidBody;
@@ -52,9 +53,9 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        bool canJump = myCollider2D.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        bool grounded = myCollider2D.IsTouchingLayers(LayerMask.GetMask("Ground"));
 
-        if (CrossPlatformInputManager.GetButtonDown("Jump") && canJump)
+        if (CrossPlatformInputManager.GetButtonDown("Jump") && grounded)
         {
             Vector2 jumpVelocityToAdd = new Vector2(0f, jumpSpeed);
             myRigidBody.velocity += jumpVelocityToAdd;
