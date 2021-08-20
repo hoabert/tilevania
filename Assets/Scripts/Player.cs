@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
 
 public class Player : MonoBehaviour
 
@@ -19,20 +18,24 @@ public class Player : MonoBehaviour
     // Cached component references
     Rigidbody2D myRigidBody;
     Animator myAnimator ;
-    Collider2D myCollider2D;
+    Collider2D bodyCollider2D;
+    Collider2D feetCollider2D;
 
     // Start is called before the first frame update
     void Start()
     {
         myRigidBody = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
-        myCollider2D = GetComponent<Collider2D>();
+        bodyCollider2D = GetComponent<Collider2D>();
+        feetCollider2D = GetComponent<BoxCollider2D>();
         gravityScaleAtStart = myRigidBody.gravityScale;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!isAlive) { return; }
+
         Run();
         FlipSprite();
         Jump();
@@ -41,7 +44,7 @@ public class Player : MonoBehaviour
 
     private void Run()
     {
-        float controlThrow = CrossPlatformInputManager.GetAxis("Horizontal"); // value is between -1 to 1
+        float controlThrow = Input.GetAxis("Horizontal"); // value is between -1 to 1
         Vector2 playerVelocity = new Vector2(controlThrow * runSpeed, myRigidBody.velocity.y);
         myRigidBody.velocity = playerVelocity;
 
@@ -53,9 +56,9 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        bool grounded = myCollider2D.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        bool grounded = feetCollider2D.IsTouchingLayers(LayerMask.GetMask("Ground"));
 
-        if (CrossPlatformInputManager.GetButtonDown("Jump") && grounded)
+        if (Input.GetButtonDown("Jump") && grounded)
         {
             Vector2 jumpVelocityToAdd = new Vector2(0f, jumpSpeed);
             myRigidBody.velocity += jumpVelocityToAdd;
@@ -75,14 +78,14 @@ public class Player : MonoBehaviour
 
     private void ClimbLadder()
     {
-        if (!myCollider2D.IsTouchingLayers(LayerMask.GetMask("Ladders"))) {
+        if (!bodyCollider2D.IsTouchingLayers(LayerMask.GetMask("Ladders"))) {
 
             myAnimator.SetBool("isClimbing", false);
             myRigidBody.gravityScale = gravityScaleAtStart;
             return;
         }
 
-        float controlThrow = CrossPlatformInputManager.GetAxis("Vertical");
+        float controlThrow = Input.GetAxis("Vertical");
 
         if (controlThrow > Mathf.Epsilon)
         {
@@ -102,6 +105,11 @@ public class Player : MonoBehaviour
 
 
 
+    }
+
+    private void deathHandler()
+    {
+        
     }
 
 }
