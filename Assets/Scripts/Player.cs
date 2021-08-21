@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ public class Player : MonoBehaviour
 
     // Cached component references
     Rigidbody2D myRigidBody;
-    Animator myAnimator ;
+    Animator myAnimator;
     Collider2D bodyCollider2D;
     Collider2D feetCollider2D;
 
@@ -34,12 +35,23 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ResetCharacter();
+
         if (!isAlive) { return; }
 
         Run();
         FlipSprite();
         Jump();
         ClimbLadder();
+        DeathHandler();
+    }
+
+    private void ResetCharacter()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            transform.position = new Vector2(-1.5f, 3f);
+        }
     }
 
     private void Run()
@@ -107,9 +119,15 @@ public class Player : MonoBehaviour
 
     }
 
-    private void deathHandler()
+    private void DeathHandler()
     {
-        
+        if (bodyCollider2D.IsTouchingLayers(LayerMask.GetMask("Enemy")))
+        {
+            isAlive = false;
+            myAnimator.SetTrigger("isDead");
+
+            myRigidBody.velocity = new Vector2(-2f, 15f);
+        }
     }
 
 }

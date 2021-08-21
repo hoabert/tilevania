@@ -36,9 +36,13 @@ public class Enemy : MonoBehaviour
         return transform.localScale.x == 1;
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    // should be redone as raycast 
+    private void OnTriggerExit2D(Collider2D other)
     {
-        transform.localScale = new Vector2(-(Mathf.Sign(myRigidBody2d.velocity.x)), 1f);
+        if (other.gameObject.layer == 8)
+        {
+            transform.localScale = new Vector2(-(Mathf.Sign(myRigidBody2d.velocity.x)), 1f);
+        }
     }
 
 }
