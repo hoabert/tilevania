@@ -127,6 +127,7 @@ public class Player : MonoBehaviour
             myAnimator.SetTrigger("isDead");
 
             myRigidBody.velocity = new Vector2(-2f, 15f);
+            FindObjectOfType<GameSession>().PlayerDeathHandler();
         }
     }
 
