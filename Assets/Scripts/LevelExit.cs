@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class LevelExit : MonoBehaviour
 {
     Collider2D myCollider2D;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,7 +18,6 @@ public class LevelExit : MonoBehaviour
     {
         if (myCollider2D.IsTouchingLayers(LayerMask.GetMask("Player")))
         {
-            Debug.Log("End Level Anim!");
             StartCoroutine("NextLevel");
         }
     }
@@ -26,9 +26,11 @@ public class LevelExit : MonoBehaviour
     {
         Time.timeScale = 0.25f;
         yield return new WaitForSeconds(1f);
+        Destroy(FindObjectOfType<LevelPersistence>().gameObject);
 
         Time.timeScale = 1f;
         var currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+
         SceneManager.LoadScene(currentSceneIndex + 1);
     }
 }
