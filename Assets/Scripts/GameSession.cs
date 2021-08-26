@@ -41,6 +41,7 @@ public class GameSession : MonoBehaviour
     public void UpdateHud()
     {
         livesText.text = lives.ToString();
+        scoreText.text = score.ToString();
     }
 
     // Update is called once per frame
